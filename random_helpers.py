@@ -10,9 +10,6 @@ from scipy.stats import skewnorm
 
 """
 Define generator functions
-
-Note: generators wil return a single value o
-
 """
 
 def rand_uniform(low=1, high=10, size=1, decimals='all'):
