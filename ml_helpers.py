@@ -6,6 +6,31 @@ from sklearn.decomposition import PCA
 from scipy import stats as st
 
 
+def association_metrics(data, x, y):
+    """
+    Calculates the metrics of the association rule X => Y
+    Args:
+        * data: a 2D list, each row of which is a sample/instance
+        * x: a list, set or string that represents set X
+        * y: a list, set or string that represents set Y
+    Returns:
+        A dictionary with key-value pairs for support, confidence and lift.
+        In case of a division by zero, the output value is None.
+    """
+    
+    n = len(data)
+    data = list(map(set, data))
+    x, y = set(x), set(y)
+    xy = x | y
+    n_x = sum(map(lambda a: x == x & a, data))
+    n_y = sum(map(lambda a: y == y & a, data))
+    n_xy = sum(map(lambda a: xy == xy & a, data))
+    
+    return {'support': n_xy / n if n > 0 else None,
+            'confidence': n_xy / n_x if n_x > 0 else None,
+            'lift': n_xy * n / n_x / n_y if n_x * n_y > 0 else None}
+
+
 def entropy(data):
     """
     Calculates the entropy in a dictionary, list or string
