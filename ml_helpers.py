@@ -124,38 +124,38 @@ def uniques(data, max_length=0, max_shown=10, ascending=False):
         **{'word-wrap': 'break-word', 'line-height': '125%'})
 
 
-def outliers(sr, threshold=5, robust=False, verbose=True):
+def outliers(sr, threshold=3, robust=False, verbose=True):
     """
-    Finds the outliers in a Pandas series and returns a list with their indices.
-
+    Finds the outliers in a series and returns a list of their indices.
+    
     Args:
-        sr: Pandas series
+        sr: a 1D list or Pandas series
         threshold: maximum deviation to be tolerated
         robust: use median absolute deviation instead of standard deviation
         verbose: print the number of columns dropped
-
+    
     Returns:
-        A list with the indices of the outliers
+        A list of the indices of the outliers
     """
 
     method = 'MAD/MeanAd' if robust else 'SD'
-    x = sr
+    x = pd.Series(sr)
+    name = x.name if x.name != None else 'the series'
+    
     try:
         if robust:
             x = (x - x.median()).abs()  # Absolute distances from the mean
             mad = x.median()  # Median distance from the mean
-            if mad == 0:
-                x /= 1.486 * x.mean()
-            else:
-                x /= 1.253314 * mad
+            x /= 1.486 * x.mean() if mad == 0 else 1.253314 * mad
         else:
-            x = (x - x.mean()).abs() / x.std()
+            x = (x - x.mean()).abs() / x.std()  # Absolute SD
     except:
-        print('Found no outliers in {}'.format(sr))
+        if verbose: print(f'Could not find outliers in {name}')
+            
     mask = x > threshold
-    if verbose: print('Found {:,} outliers ({} > {}) in {}'.format(
-        len(x[mask]), method, threshold, sr.name))
-    return sr[mask].index
+    n_outliers = len(x[mask])
+    if verbose: print(f'Found {n_outliers:,} outlier{"" if n_outliers == 1 else "s"} ({method} > {threshold}) in {name}')
+    return list(x[mask].index)
 
 
 def polytrans(x, y, order=2):
