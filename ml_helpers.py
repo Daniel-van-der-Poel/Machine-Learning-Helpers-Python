@@ -8,11 +8,13 @@ from scipy import stats as st
 
 def association_metrics(data, x, y):
     """
-    Calculates the metrics of the association rule X => Y
+    Calculates quality metrics for the association rule X => Y
+    
     Args:
         * data: a 2D list, each row of which is a sample/instance
         * x: a list, set or string that represents set X
         * y: a list, set or string that represents set Y
+        
     Returns:
         A dictionary with key-value pairs for support, confidence and lift.
         In case of a division by zero, the output value is None.
