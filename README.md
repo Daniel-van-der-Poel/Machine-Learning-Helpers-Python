@@ -1,1 +1,1 @@
-# ML-Tools-Python
+## A collection of Python functions for machine learning purposes
